@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14213d">
+<title>The Gullywood Academy — Admin</title>
+<style>
+:root{
+  --ink:#14213d;--ink2:#22325a;--acc:#f59e0b;--acc-bg:#fff4dc;
+  --bg:#f4f6fb;--card:#fff;--line:#e6e9f2;--muted:#6b7280;--txt:#111827;
+  --g:#15803d;--g-bg:#e6f6ec;--r:#dc2626;--r-bg:#fdecec;--y:#b45309;--y-bg:#fff4dc;--b:#2563eb;--b-bg:#e8f0ff;
+  --wa:#25d366;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.4;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+h1{font-size:22px;margin:0;letter-spacing:-.3px}
+h2{font-size:16px;margin:0 0 10px}
+h3{font-size:17px;margin:0}
+.sub{color:var(--muted);margin:4px 0 0;font-size:13.5px}
+.app{display:flex;min-height:100vh}
+
+/* sidebar (desktop) */
+.side{display:none}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.2px}
+.logo{width:34px;height:34px;border-radius:10px;background:var(--acc);color:var(--ink);display:grid;place-items:center;font-weight:900;font-size:15px;flex:none}
+.brand small{display:block;font-weight:500;opacity:.65;font-size:11px;letter-spacing:.3px;text-transform:uppercase}
+.side nav{display:flex;flex-direction:column;gap:4px;margin-top:26px;flex:1}
+.side nav button{display:flex;align-items:center;gap:12px;background:none;border:0;color:#cfd6e6;padding:11px 12px;border-radius:10px;text-align:left;font-weight:600}
+.side nav button:hover{background:var(--ink2);color:#fff}
+.side nav button.on{background:#fff;color:var(--ink)}
+.side nav svg{width:20px;height:20px}
+.side .foot{display:flex;gap:8px}
+.side .foot button{flex:1;background:var(--ink2);border:0;color:#fff;border-radius:10px;padding:9px;font-size:13px;font-weight:600}
+
+/* top bar (mobile) */
+.top{position:sticky;top:0;z-index:20;background:var(--ink);color:#fff;padding:12px 14px;padding-top:calc(12px + env(safe-area-inset-top));display:flex;justify-content:space-between;align-items:center}
+.top .acts{display:flex;gap:6px}
+.iconbtn{background:var(--ink2);border:0;color:#fff;width:36px;height:36px;border-radius:10px;display:grid;place-items:center}
+.iconbtn svg{width:18px;height:18px}
+
+main{flex:1;width:100%;max-width:1120px;margin:0 auto;padding:16px 14px 96px}
+
+/* bottom nav (mobile) */
+.bnav{position:fixed;left:0;right:0;bottom:0;z-index:20;background:#fff;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(6,1fr);padding:6px 2px calc(6px + env(safe-area-inset-bottom))}
+.bnav button{background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;color:var(--muted);padding:4px 0;font-weight:600}
+.bnav button.on{color:var(--ink)}
+.bnav button.on svg{stroke:var(--acc)}
+.bnav svg{width:22px;height:22px}
+svg.i{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+@media(min-width:900px){
+  .side{display:flex;flex-direction:column;width:236px;flex:none;background:var(--ink);color:#fff;position:sticky;top:0;height:100vh;padding:22px 14px}
+  .top,.bnav{display:none}
+  main{padding:30px 36px 40px}
+  h1{font-size:26px}
+}
+
+/* page header */
+.ph{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+
+/* buttons */
+.btn{border:0;border-radius:11px;padding:10px 15px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:7px;background:var(--line);color:var(--txt);white-space:nowrap}
+.btn svg{width:17px;height:17px}
+.btn.pri{background:var(--ink);color:#fff}
+.btn.acc{background:var(--acc);color:var(--ink)}
+.btn.wa{background:var(--wa);color:#fff}
+.btn.ghost{background:transparent;border:1.5px solid var(--line)}
+.btn.danger{background:var(--r-bg);color:var(--r)}
+.btn.sm{padding:7px 11px;font-size:13px;border-radius:9px}
+.btn.block{width:100%}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.link{background:none;border:0;color:var(--b);font-weight:600;padding:0}
+
+/* cards */
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
+.grid2{display:grid;gap:14px}
+@media(min-width:900px){.grid2{grid-template-columns:1fr 1fr}}
+.stack{display:flex;flex-direction:column;gap:10px}
+.row{display:flex;align-items:center;gap:10px}
+.between{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.muted{color:var(--muted)}
+.small{font-size:12.5px}
+.mt{margin-top:14px}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+@media(min-width:700px){.stats{grid-template-columns:repeat(3,1fr)}}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:3px;min-width:0}
+.stat span{font-size:12.5px;color:var(--muted);font-weight:600}
+.stat b{font-size:21px;letter-spacing:-.4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stat small{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stat.g b{color:var(--g)} .stat.r b{color:var(--r)}
+.stat.hero{background:var(--ink);color:#fff;border-color:var(--ink)}
+.stat.hero span,.stat.hero small{color:#c4cce0}
+.bar{height:8px;background:var(--line);border-radius:6px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--g);border-radius:6px}
+
+/* month picker / date bar */
+.mpick{display:inline-flex;align-items:center;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:14px}
+.mpick button{background:none;border:0;width:40px;height:40px;font-size:20px;color:var(--ink)}
+.mpick b{min-width:140px;text-align:center;font-size:14.5px}
+.datebar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.datebar input[type=date]{border:1px solid var(--line);border-radius:11px;padding:8px 10px;background:#fff}
+
+/* chips & badges */
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;padding:4px 9px;border-radius:20px;white-space:nowrap}
+.chip.g{background:var(--g-bg);color:var(--g)} .chip.r{background:var(--r-bg);color:var(--r)}
+.chip.y{background:var(--y-bg);color:var(--y)} .chip.n{background:#eef0f5;color:var(--muted)} .chip.b{background:var(--b-bg);color:var(--b)}
+.dot{width:7px;height:7px;border-radius:50%;background:currentColor;display:inline-block}
+.live .dot{animation:pulse 1.4s infinite}
+@keyframes pulse{50%{opacity:.25}}
+.tag{display:inline-block;font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:7px;margin:2px 4px 0 0;color:#fff}
+
+/* filters */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.seg{display:inline-flex;background:#e9ecf3;border-radius:11px;padding:3px}
+.seg button{border:0;background:none;padding:7px 12px;border-radius:9px;font-weight:700;font-size:13px;color:var(--muted)}
+.seg button.on{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.search{flex:1;min-width:170px;border:1px solid var(--line);border-radius:11px;padding:9px 12px;background:#fff}
+select.sel{border:1px solid var(--line);border-radius:11px;padding:9px 10px;background:#fff}
+
+/* class cards */
+.ccard{display:flex;gap:12px;align-items:stretch;background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px;width:100%;text-align:left}
+.ccard:hover{border-color:#c9cfdd}
+.ccard .bar2{width:5px;border-radius:5px;flex:none}
+.ccard .time{width:74px;flex:none;font-weight:800;font-size:13.5px}
+.ccard .time small{display:block;color:var(--muted);font-weight:600}
+.ccard .info{flex:1;min-width:0}
+.ccard .info b{font-size:15.5px}
+.ccard .right{display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;gap:6px}
+
+/* list rows */
+.list{display:flex;flex-direction:column;gap:8px}
+.item{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:11px 12px;width:100%;text-align:left}
+button.item:hover{border-color:#c9cfdd}
+.av{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:13px;flex:none;background:var(--acc-bg);color:var(--y)}
+.item .info{flex:1;min-width:0}
+.item .info b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item .acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.feeitem{flex-wrap:wrap}
+.feeitem .acts{width:100%}
+@media(min-width:620px){.feeitem{flex-wrap:nowrap}.feeitem .acts{width:auto}}
+
+.banner{border-radius:14px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;margin-bottom:12px;font-size:14px}
+.banner.y{background:var(--y-bg);color:#7c4a03}
+.banner.r{background:var(--r-bg);color:#991b1b}
+.banner.b{background:var(--b-bg);color:#1e3a8a}
+.banner.g{background:var(--g-bg);color:#14532d}
+.empty{text-align:center;color:var(--muted);padding:30px 10px;background:#fff;border:1px dashed var(--line);border-radius:16px}
+
+/* table */
+.tablewrap{overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:16px}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:14px}
+th,td{padding:11px 12px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.3px;background:#fafbfd}
+tr.click{cursor:pointer} tr.click:hover td{background:#fafbfd}
+tbody tr:last-child td{border-bottom:0}
+@media(max-width:640px){
+  table{min-width:0} thead{display:none}
+  tbody tr{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:12px;border-bottom:1px solid var(--line)}
+  tbody tr:last-child{border-bottom:0}
+  tbody td{border:0;padding:0;white-space:normal}
+  tbody td:first-child{width:100%}
+  tbody td[data-l]::before{content:attr(data-l) " ";color:var(--muted);font-size:12px;font-weight:600}
+}
+
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.5);z-index:50;display:flex;align-items:flex-end;justify-content:center}
+.modal.hidden{display:none}
+.sheet{background:#fff;width:100%;max-width:560px;max-height:92vh;border-radius:20px 20px 0 0;display:flex;flex-direction:column;animation:up .2s ease-out}
+@media(min-width:640px){.modal{align-items:center}.sheet{border-radius:20px;max-height:88vh}}
+@keyframes up{from{transform:translateY(30px);opacity:.6}}
+.sheet-head{display:flex;justify-content:space-between;align-items:center;padding:16px 18px;border-bottom:1px solid var(--line)}
+.sheet-body{padding:16px 18px calc(18px + env(safe-area-inset-bottom));overflow-y:auto}
+.x{background:#eef0f5;border:0;width:32px;height:32px;border-radius:50%;font-size:16px}
+
+/* forms */
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.field label{font-size:13px;font-weight:700;color:#374151}
+.field input,.field select,.field textarea{border:1px solid #d6dbe6;border-radius:11px;padding:10px 12px;background:#fff;width:100%}
+.field textarea{min-height:90px;resize:vertical}
+.field .hint{font-size:12px;color:var(--muted)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.checks{display:flex;flex-wrap:wrap;gap:7px}
+.checks label{display:flex;align-items:center;gap:6px;border:1.5px solid var(--line);border-radius:10px;padding:7px 10px;font-weight:600;font-size:13.5px;cursor:pointer}
+.checks label:has(input:checked){border-color:var(--ink);background:#f1f3f9}
+.checks input{accent-color:var(--ink)}
+
+/* attendance toggles */
+.att-head{display:flex;gap:8px;margin-bottom:12px}
+.att-head .stat{flex:1;padding:10px 12px}
+.att-head .stat b{font-size:19px}
+.srow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 2px;border-bottom:1px solid var(--line)}
+.srow:last-child{border-bottom:0}
+.tog{border:0;border-radius:20px;padding:7px 0;width:94px;font-weight:800;font-size:13px}
+.tog.p{background:var(--g-bg);color:var(--g)}
+.tog.a{background:var(--r);color:#fff}
+.stickybar{position:sticky;bottom:-18px;background:#fff;padding:12px 0 4px;margin-top:6px;display:flex;gap:8px}
+.marks input{width:76px;border:1px solid #d6dbe6;border-radius:9px;padding:8px;text-align:center}
+
+/* lock */
+.lock{position:fixed;inset:0;z-index:100;background:var(--ink);display:flex;align-items:center;justify-content:center;padding:20px}
+.lock.hidden{display:none}
+.lockbox{background:#fff;border-radius:22px;padding:28px 24px;width:100%;max-width:360px;text-align:center}
+.lockbox .logo{width:54px;height:54px;font-size:22px;margin:0 auto 14px;border-radius:16px}
+.lockbox input{width:100%;text-align:center;font-size:24px;letter-spacing:10px;border:1.5px solid #d6dbe6;border-radius:12px;padding:12px;margin:18px 0 12px}
+
+.toast{position:fixed;left:50%;bottom:86px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 16px;border-radius:12px;font-weight:600;font-size:14px;z-index:200;box-shadow:0 8px 24px rgba(0,0,0,.2);max-width:92vw;text-align:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.show{opacity:1}
+@media(min-width:900px){.toast{bottom:30px}}
+@media print{.side,.top,.bnav,.noprint{display:none!important}main{padding:0}body{background:#fff}}
+</style>
+</head>
+<body>
+
+<div class="lock hidden" id="lock">
+  <form class="lockbox" data-form="unlock">
+    <div class="logo">GA</div>
+    <h3 id="lockName">The Gullywood Academy</h3>
+    <p class="sub">Admin panel · Staff only</p>
+    <input type="password" inputmode="numeric" name="pin" maxlength="6" placeholder="••••" autocomplete="off">
+    <button class="btn pri block">Unlock</button>
+    <p class="sub small" style="margin-top:12px">Demo PIN: <b>1234</b></p>
+  </form>
+</div>
+
+<div class="app">
+  <aside class="side">
+    <div class="brand"><div class="logo">GA</div><div><span id="sideName">The Gullywood Academy</span><small>Admin panel</small></div></div>
+    <nav id="sideNav"></nav>
+    <div class="foot">
+      <button data-act="settings">⚙︎ Settings</button>
+      <button data-act="lock">🔒 Lock</button>
+    </div>
+  </aside>
+  <div style="flex:1;min-width:0">
+    <header class="top">
+      <div class="brand"><div class="logo">GA</div><div><span id="topName">The Gullywood Academy</span><small>Admin panel</small></div></div>
+      <div class="acts">
+        <button class="iconbtn" data-act="settings" aria-label="Settings"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+        <button class="iconbtn" data-act="lock" aria-label="Lock"><svg class="i" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></button>
+      </div>
+    </header>
+    <main id="main"></main>
+  </div>
+</div>
+<nav class="bnav" id="bNav"></nav>
+
+<div class="modal hidden" id="modal">
+  <div class="sheet">
+    <div class="sheet-head"><h3 id="mTitle"></h3><button class="x" data-act="close" aria-label="Close">✕</button></div>
+    <div class="sheet-body" id="mBody"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============ helpers ============ */
+const $ = (s, r = document) => r.querySelector(s);
+const uid = () => Math.random().toString(36).slice(2, 9);
+const pad = n => String(n).padStart(2, '0');
+const ymd = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const ym = d => ymd(d).slice(0, 7);
+const parseYmd = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const METHODS = ['Cash','Bank transfer','JazzCash','Easypaisa'];
+const COLORS = ['#0ea5e9','#8b5cf6','#f59e0b','#10b981','#ef4444','#ec4899','#14b8a6','#6366f1'];
+const fmtRs = n => 'Rs ' + Math.round(n || 0).toLocaleString('en-US');
+const fmtMonth = m => { const [y, mo] = m.split('-').map(Number); return `${MONTHS[mo - 1]} ${y}`; };
+const fmtDate = s => { const d = parseYmd(s); return `${DAYS[d.getDay()]}, ${d.getDate()} ${MONTHS[d.getMonth()].slice(0, 3)}`; };
+const fmtShort = s => { const d = parseYmd(s); return `${d.getDate()} ${MONTHS[d.getMonth()].slice(0, 3)}`; };
+const fmtTime = t => { let [h, m] = t.split(':').map(Number); const ap = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12; return `${h}:${pad(m)} ${ap}`; };
+const shiftM = (m, d) => { const [y, mo] = m.split('-').map(Number); return ym(new Date(y, mo - 1 + d, 1)); };
+const shiftD = (s, d) => { const t = parseYmd(s); t.setDate(t.getDate() + d); return ymd(t); };
+const daysOfMonth = m => { const [y, mo] = m.split('-').map(Number); const n = new Date(y, mo, 0).getDate(); return Array.from({ length: n }, (_, i) => `${m}-${pad(i + 1)}`); };
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const initials = n => n.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
+const activeOn = (s, d) => s.joinDate <= d && !(s.status === 'left' && s.leftDate && s.leftDate <= d);
+const activeInMonth = (s, m) => s.joinDate.slice(0, 7) <= m && !(s.status === 'left' && s.leftDate && s.leftDate.slice(0, 7) < m);
+const TODAY = ymd(new Date());
+const CUR_M = TODAY.slice(0, 7);
+
+/* ============ demo data ============ */
+function seed() {
+  let r = 20261030;
+  const rnd = () => ((r = (r * 16807) % 2147483647) / 2147483647);
+  const pick = a => a[Math.floor(rnd() * a.length)];
+  const shuffle = a => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  const now = new Date(), y = now.getFullYear(), mo = now.getMonth(), td = now.getDate();
+  const dt = (mOff, d) => ymd(new Date(y, mo + mOff, d));
+  const cm = ym(now), pm = ym(new Date(y, mo - 1, 1));
+  const ph = () => '03' + pick(['00', '01', '21', '33', '45', '12', '23']) + '-' + String(Math.floor(rnd() * 1e7)).padStart(7, '0');
+
+  const plans = [
+    { id: 'p1', name: 'Early Batch', fee: 8000 },
+    { id: 'p2', name: 'Regular', fee: 10000 },
+    { id: 'p3', name: 'Crash Course', fee: 14000 },
+  ];
+  const classes = [
+    { id: 'c1', name: 'Chemistry',   teacher: 'Sir Kamran Ali',   start: '10:00', end: '11:00', days: [1,2,3,4,5,6], color: '#0ea5e9' },
+    { id: 'c2', name: 'English',     teacher: 'Miss Sana Tariq',  start: '12:00', end: '13:00', days: [1,2,3,4,5,6], color: '#8b5cf6' },
+    { id: 'c3', name: 'Physics',     teacher: 'Sir Faraz Ahmed',  start: '14:00', end: '15:00', days: [1,2,3,4,5,6], color: '#f59e0b' },
+    { id: 'c4', name: 'Mathematics', teacher: 'Sir Imran Shah',   start: '15:00', end: '16:00', days: [1,2,3,4,5,6], color: '#10b981' },
+    { id: 'c5', name: 'Accounting',  teacher: 'Sir Adeel Khan',   start: '17:00', end: '18:00', days: [1,2,4,5],     color: '#ef4444' },
+    { id: 'c6', name: 'Economics',   teacher: 'Miss Rabia Naveed',start: '18:00', end: '19:00', days: [2,3,5,6],     color: '#ec4899' },
+  ];
+  const names = ['Ahmed Raza','Fatima Khan','Hamza Siddiqui','Ayesha Malik','Bilal Ahmed','Zainab Hussain','Usman Tariq','Hira Shah','Ali Haider','Maryam Qureshi','Saad Iqbal','Noor Fatima','Talha Javed','Sana Mirza','Huzaifa Ali','Iqra Rehman','Daniyal Sheikh','Amna Butt'];
+  const students = names.map((n, i) => {
+    const ids = shuffle(classes.map(c => c.id)).slice(0, 2 + Math.floor(rnd() * 3));
+    let plan, join;
+    if (i < 11) { plan = plans[0]; join = dt(-2, 3 + Math.floor(rnd() * 20)); }
+    else if (i < 15) { plan = plans[1]; join = dt(-1, 2 + Math.floor(rnd() * 20)); }
+    else { plan = plans[2]; join = dt(0, 1 + Math.floor(rnd() * Math.max(1, td - 1))); }
+    return { id: 's' + (i + 1), name: n, phone: ph(), parentPhone: ph(), classIds: ids, planId: plan.id, fee: plan.fee, joinDate: join, status: 'active' };
+  });
+  students[3].planId = 'custom'; students[3].fee = 7000;           // sibling discount
+  students[10].status = 'left'; students[10].leftDate = dt(-1, 18); // left last month
+
+  const holidays = {}, cancels = {}, att = {};
+  if (dt(0, 12) < TODAY && new Date(y, mo, 12).getDay() !== 0) holidays[dt(0, 12)] = 'Public holiday';
+  if (dt(0, 7) < TODAY) cancels[dt(0, 7) + '|c3'] = 'Teacher unavailable (emergency)';
+  const cur = new Date(y, mo - 1, 1);
+  while (ymd(cur) < TODAY) {
+    const d = ymd(cur), wd = cur.getDay();
+    if (!holidays[d]) classes.forEach(c => {
+      if (!c.days.includes(wd)) return;
+      const k = d + '|' + c.id; if (cancels[k]) return;
+      const roster = students.filter(s => s.classIds.includes(c.id) && activeOn(s, d));
+      att[k] = { absent: roster.filter(() => rnd() < 0.09).map(s => s.id) };
+    });
+    cur.setDate(cur.getDate() + 1);
+  }
+  // first class of today already marked, so the demo shows both states
+  const firstToday = classes.filter(c => c.days.includes(now.getDay())).sort((a, b) => a.start.localeCompare(b.start))[0];
+  if (firstToday) {
+    const roster = students.filter(s => s.classIds.includes(firstToday.id) && activeOn(s, TODAY));
+    att[TODAY + '|' + firstToday.id] = { absent: roster.filter(() => rnd() < 0.12).map(s => s.id) };
+  }
+
+  const payments = {}, reminders = {};
+  students.forEach(s => [pm, cm].forEach(m => {
+    if (!activeInMonth(s, m)) return;
+    const isCur = m === cm;
+    if (!isCur && s.id === 's8') { reminders[m + '|' + s.id] = dt(-1, 2); return; }
+    if (isCur && rnd() > 0.62) { if (td > 2) reminders[m + '|' + s.id] = dt(0, 2); return; }
+    const day = 1 + Math.floor(rnd() * (isCur ? Math.min(9, Math.max(1, td - 1)) : 9));
+    let pd = isCur ? dt(0, day) : dt(-1, day);
+    if (pd < s.joinDate) pd = s.joinDate; if (pd > TODAY) pd = TODAY;
+    payments[m + '|' + s.id] = { amount: s.fee, method: pick(METHODS), date: pd };
+  }));
+
+  const mkTest = (mOff, cid, title, day, total) => {
+    let d = dt(mOff, day);
+    if (mOff === 0 && d >= TODAY) d = dt(0, Math.max(1, td - 1));
+    const marks = {};
+    students.filter(s => s.classIds.includes(cid) && activeOn(s, d)).forEach(s => {
+      marks[s.id] = rnd() < 0.08 ? '' : Math.round(total * (0.48 + rnd() * 0.52));
+    });
+    return { id: uid(), classId: cid, title, date: d, total, marks };
+  };
+  const tests = [
+    mkTest(-1, 'c4', 'Mathematics Test 1', 20, 40),
+    mkTest(-1, 'c2', 'English Grammar Quiz', 25, 20),
+    mkTest(0, 'c1', 'Chemistry Quiz 1', 8, 20),
+    mkTest(0, 'c2', 'English Essay Test', 15, 25),
+    mkTest(0, 'c3', 'Physics Monthly Test', 22, 50),
+  ];
+
+  return {
+    v: 1,
+    settings: {
+      academy: 'The Gullywood Academy', pin: '1234',
+      remind: "Assalam-o-Alaikum! This is a gentle reminder from {academy} that {student}'s fee of {amount} for {month} is still pending. Kindly pay at your earliest convenience (cash or online transfer). JazakAllah!",
+      receipt: "Assalam-o-Alaikum! {academy} has received {student}'s fee of {amount} for {month} via {method}. Thank you!"
+    },
+    plans, classes, students, att, holidays, cancels, payments, reminders, tests
+  };
+}
+
+/* ============ storage ============ */
+const KEY = 'gullywood-academy-demo-v1';
+function load() {
+  try { const s = localStorage.getItem(KEY); if (s) return JSON.parse(s); } catch (e) {}
+  return seed();
+}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+let S = load(); save();
+
+/* ============ data helpers ============ */
+const cls = id => S.classes.find(c => c.id === id);
+const stu = id => S.students.find(s => s.id === id);
+const planName = s => (S.plans.find(p => p.id === s.planId) || { name: 'Custom fee' }).name;
+const classesOn = d => S.classes.filter(c => c.days.includes(parseYmd(d).getDay())).sort((a, b) => a.start.localeCompare(b.start));
+const roster = (cid, d) => S.students.filter(s => s.classIds.includes(cid) && activeOn(s, d)).sort((a, b) => a.name.localeCompare(b.name));
+function classStatus(d, cid) {
+  if (S.holidays[d]) return 'holiday';
+  if (S.cancels[d + '|' + cid]) return 'cancelled';
+  if (S.att[d + '|' + cid]) return 'marked';
+  if (d > TODAY) return 'upcoming';
+  return 'pending';
+}
+function isLive(c) {
+  const n = new Date(), mins = n.getHours() * 60 + n.getMinutes();
+  const toM = t => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+  return mins >= toM(c.start) && mins < toM(c.end);
+}
+function monthStats(s, m) {
+  const r = { P: 0, A: 0, C: 0, by: {} };
+  for (const d of daysOfMonth(m)) {
+    if (d > TODAY) break;
+    if (!activeOn(s, d)) continue;
+    const wd = parseYmd(d).getDay();
+    for (const cid of s.classIds) {
+      const c = cls(cid); if (!c || !c.days.includes(wd)) continue;
+      const b = r.by[cid] || (r.by[cid] = { P: 0, A: 0, C: 0 });
+      const k = d + '|' + cid;
+      if (S.holidays[d] || S.cancels[k]) { r.C++; b.C++; continue; }
+      const a = S.att[k]; if (!a) continue;
+      if (a.absent.includes(s.id)) { r.A++; b.A++; } else { r.P++; b.P++; }
+    }
+  }
+  return r;
+}
+const pctOf = (a, b) => b ? Math.round(a * 100 / b) : 0;
+const dueList = m => S.students.filter(s => activeInMonth(s, m)).sort((a, b) => a.name.localeCompare(b.name));
+const payOf = (m, id) => S.payments[m + '|' + id];
+function feeStatus(s, m) {
+  const p = payOf(m, s.id);
+  if (!p) return 'unpaid';
+  return p.amount >= s.fee ? 'paid' : 'partial';
+}
+function money(m) {
+  let exp = 0, rec = 0, unpaid = 0;
+  const list = dueList(m);
+  list.forEach(s => { exp += s.fee; const p = payOf(m, s.id); if (p) rec += p.amount; if (feeStatus(s, m) !== 'paid') unpaid++; });
+  return { exp, rec, pend: Math.max(0, exp - rec), unpaid, n: list.length };
+}
+const testsOf = m => S.tests.filter(t => t.date.slice(0, 7) === m).sort((a, b) => b.date.localeCompare(a.date));
+function fill(tpl, s, m, extra = {}) {
+  const p = payOf(m, s.id);
+  const amount = extra.amount != null ? extra.amount : (p && feeStatus(s, m) === 'partial' ? s.fee - p.amount : s.fee);
+  return tpl.replace(/\{academy\}/g, S.settings.academy).replace(/\{student\}/g, s.name)
+    .replace(/\{amount\}/g, fmtRs(amount)).replace(/\{month\}/g, fmtMonth(m)).replace(/\{method\}/g, extra.method || (p ? p.method : ''));
+}
+function waLink(phone, text) {
+  let p = String(phone || '').replace(/\D/g, '');
+  if (p.startsWith('0')) p = '92' + p.slice(1);
+  return `https://wa.me/${p}?text=${encodeURIComponent(text)}`;
+}
+function openWA(phone, text) { window.open(waLink(phone, text), '_blank'); }
+
+/* ============ UI state ============ */
+const UI = { view: 'home', dashM: CUR_M, attDate: TODAY, feeM: CUR_M, feeF: 'all', feeQ: '', stuQ: '', stuC: '', stuT: 'active', testM: CUR_M, repM: CUR_M, repQ: '', repC: '' };
+let M = null; // modal state
+
+const ICONS = {
+  home: '<path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+  att: '<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M8 14l3 3 5-6"/>',
+  stu: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.3c2.2.7 3.5 2.8 3.5 5.7"/>',
+  fee: '<rect x="2.5" y="6" width="19" height="13" rx="2"/><path d="M2.5 10h19M16 15h2.5"/>',
+  test: '<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 10h6M9 14h6M9 18h3"/>',
+  rep: '<path d="M4 20V11M10 20V5M16 20v-6M21 20H3"/>',
+  wa: '<path d="M3 21l1.6-4.6A8.5 8.5 0 1 1 7.7 19.6z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 .8c-.9-.4-1.6-1.1-2-2l.8-1-1-2z"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>',
+};
+const icon = (n, cls = 'i') => `<svg class="${cls}" viewBox="0 0 24 24">${ICONS[n]}</svg>`;
+const TABS = [['home', 'Home', 'home'], ['att', 'Attendance', 'att'], ['stu', 'Students', 'stu'], ['fee', 'Fees', 'fee'], ['test', 'Tests', 'test'], ['rep', 'Reports', 'rep']];
+
+/* ============ render ============ */
+function render() {
+  const nav = TABS.map(([v, label, ic]) => `<button class="${UI.view === v ? 'on' : ''}" data-act="nav" data-v="${v}">${icon(ic)}<span>${label}</span></button>`).join('');
+  $('#sideNav').innerHTML = nav;
+  $('#bNav').innerHTML = nav;
+  ['#sideName', '#topName', '#lockName'].forEach(s => $(s).textContent = S.settings.academy);
+  document.title = S.settings.academy + ' — Admin';
+  $('#main').innerHTML = VIEWS[UI.view]();
+}
+const monthPicker = (key, m) => `<div class="mpick"><button data-act="mon" data-k="${key}" data-d="-1" aria-label="Previous month">‹</button><b>${fmtMonth(m)}</b><button data-act="mon" data-k="${key}" data-d="1" aria-label="Next month">›</button></div>`;
+const stat = (label, val, sub, tone = '') => `<div class="stat ${tone}"><span>${label}</span><b>${val}</b><small>${sub}</small></div>`;
+const CHIP = { marked: ['Marked', 'g'], pending: ['Not marked', 'y'], cancelled: ['Cancelled', 'r'], holiday: ['Holiday', 'r'], upcoming: ['Upcoming', 'n'] };
+function statusChip(d, c) {
+  const st = classStatus(d, c.id);
+  if (d === TODAY && st === 'pending' && isLive(c)) return `<span class="chip b live"><span class="dot"></span>Live now</span>`;
+  const [t, tone] = CHIP[st];
+  return `<span class="chip ${tone}">${t}</span>`;
+}
+function classCard(d, c) {
+  const st = classStatus(d, c.id), n = roster(c.id, d).length;
+  let line = `${n} students`;
+  if (st === 'marked') { const a = S.att[d + '|' + c.id].absent.length; line = `<span style="color:var(--g);font-weight:700">${n - a} present</span> · <span style="color:var(--r);font-weight:700">${a} absent</span>`; }
+  if (st === 'cancelled') line = esc(S.cancels[d + '|' + c.id]);
+  return `<button class="ccard" data-act="openClass" data-d="${d}" data-c="${c.id}">
+    <span class="bar2" style="background:${c.color}"></span>
+    <span class="time">${fmtTime(c.start)}<small>to ${fmtTime(c.end)}</small></span>
+    <span class="info"><b>${esc(c.name)}</b><div class="muted small">${esc(c.teacher)}</div><div class="small" style="margin-top:3px">${line}</div></span>
+    <span class="right">${statusChip(d, c)}<span class="muted small">›</span></span>
+  </button>`;
+}
+
+const VIEWS = {
+  home() {
+    const m = UI.dashM, mm = money(m), list = dueList(m);
+    const newAd = S.students.filter(s => s.joinDate.slice(0, 7) === m);
+    let P = 0, A = 0; list.forEach(s => { const st = monthStats(s, m); P += st.P; A += st.A; });
+    const today = classesOn(TODAY);
+    const unpaid = list.filter(s => feeStatus(s, m) !== 'paid');
+    const marked = today.filter(c => classStatus(TODAY, c.id) === 'marked').length;
+    return `
+    <div class="ph"><div><h1>Dashboard</h1><p class="sub">Assalam-o-Alaikum 👋 Here's how ${esc(S.settings.academy)} is doing.</p></div></div>
+    ${monthPicker('dash', m)}
+    <div class="stats">
+      ${stat('Amount received', fmtRs(mm.rec), `${pctOf(mm.rec, mm.exp)}% of ${fmtRs(mm.exp)} collected`, 'hero')}
+      ${stat('Yet to be received', fmtRs(mm.pend), `${mm.unpaid} student${mm.unpaid === 1 ? '' : 's'} pending`, 'r')}
+      ${stat('Total students', mm.n, `${S.classes.length} classes running`)}
+      ${stat('New admissions', newAd.length, newAd.length ? esc(newAd.map(s => s.name.split(' ')[0]).join(', ')) : 'None yet this month', 'g')}
+      ${stat('Attendance', (P + A ? pctOf(P, P + A) : 0) + '%', `${P} present · ${A} absent`)}
+      ${stat('Tests this month', testsOf(m).length, 'marks entered by teachers')}
+    </div>
+    <div class="card" style="margin-bottom:14px">
+      <div class="between" style="margin-bottom:8px"><b>Fee collection — ${fmtMonth(m)}</b><span class="muted small">${fmtRs(mm.rec)} / ${fmtRs(mm.exp)}</span></div>
+      <div class="bar"><i style="width:${pctOf(mm.rec, mm.exp)}%"></i></div>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <div class="between" style="margin-bottom:10px"><h2 style="margin:0">Today's classes</h2><span class="chip n">${marked}/${today.length} marked</span></div>
+        <p class="muted small" style="margin:-4px 0 10px">${fmtDate(TODAY)}${S.holidays[TODAY] ? ' · <b style="color:var(--r)">Holiday</b>' : ''}</p>
+        <div class="list">${today.length ? today.map(c => classCard(TODAY, c)).join('') : '<div class="empty">No classes today 🎉</div>'}</div>
+      </div>
+      <div class="card">
+        <div class="between" style="margin-bottom:10px"><h2 style="margin:0">Fees pending</h2><button class="link" data-act="nav" data-v="fee">See all ›</button></div>
+        <div class="list">
+          ${unpaid.length ? unpaid.slice(0, 6).map(s => `
+            <div class="item"><div class="av">${initials(s.name)}</div>
+              <div class="info"><b>${esc(s.name)}</b><span class="muted small">${fmtRs(s.fee)} · ${planName(s)}</span></div>
+              <button class="btn wa sm" data-act="remind" data-s="${s.id}" data-m="${m}">${icon('wa')}Remind</button></div>`).join('')
+            : '<div class="empty">Everyone has paid for this month ✅</div>'}
+          ${unpaid.length > 6 ? `<p class="muted small" style="text-align:center;margin:4px 0 0">+${unpaid.length - 6} more</p>` : ''}
+        </div>
+      </div>
+    </div>`;
+  },
+
+  att() {
+    const d = UI.attDate, hol = S.holidays[d], list = classesOn(d);
+    return `
+    <div class="ph"><div><h1>Attendance</h1><p class="sub">Everyone is <b>present</b> by default — just tap the students who are absent.</p></div>
+      <button class="btn ghost sm" data-act="manageClasses">Manage classes</button></div>
+    <div class="datebar">
+      <div class="mpick" style="margin:0"><button data-act="day" data-d="-1">‹</button><b>${fmtDate(d)}${d === TODAY ? ' · Today' : ''}</b><button data-act="day" data-d="1">›</button></div>
+      <input type="date" id="attDate" value="${d}">
+      ${d !== TODAY ? '<button class="btn sm" data-act="dayToday">Today</button>' : ''}
+    </div>
+    ${hol ? `<div class="banner r"><div>🏖️ <b>Holiday — ${esc(hol)}.</b><br>All classes are off. No student will be marked absent.</div><button class="btn sm" data-act="unholiday">Remove holiday</button></div>`
+      : list.length ? `<div class="between" style="margin-bottom:10px"><span class="muted small">${list.length} classes scheduled</span><button class="link" data-act="holiday">🏖️ Mark this day as a holiday</button></div>` : ''}
+    <div class="list">${list.length ? list.map(c => classCard(d, c)).join('') : `<div class="empty">No classes scheduled on ${DAYS[parseYmd(d).getDay()]}days.</div>`}</div>`;
+  },
+
+  stu() {
+    const act = S.students.filter(s => s.status !== 'left').length, left = S.students.length - act;
+    return `
+    <div class="ph"><div><h1>Students</h1><p class="sub">${act} active students · ${left} left</p></div>
+      <button class="btn acc" data-act="addStudent">${icon('plus')}Add student</button></div>
+    <div class="filters">
+      <div class="seg"><button class="${UI.stuT === 'active' ? 'on' : ''}" data-act="stuT" data-t="active">Active (${act})</button><button class="${UI.stuT === 'left' ? 'on' : ''}" data-act="stuT" data-t="left">Left (${left})</button></div>
+      <input class="search" id="stuQ" placeholder="Search by name or phone…" value="${esc(UI.stuQ)}">
+      <select class="sel" id="stuC"><option value="">All classes</option>${S.classes.map(c => `<option value="${c.id}" ${UI.stuC === c.id ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select>
+    </div>
+    <div class="list" id="list">${stuList()}</div>`;
+  },
+
+  fee() {
+    const m = UI.feeM, mm = money(m);
+    const counts = { all: mm.n, unpaid: mm.unpaid, paid: mm.n - mm.unpaid };
+    return `
+    <div class="ph"><div><h1>Fees</h1><p class="sub">Track who has paid and send WhatsApp reminders in one tap.</p></div></div>
+    ${monthPicker('fee', m)}
+    <div class="stats">
+      ${stat('Expected', fmtRs(mm.exp), `${mm.n} students`)}
+      ${stat('Received', fmtRs(mm.rec), `${pctOf(mm.rec, mm.exp)}% collected`, 'g')}
+      ${stat('Remaining', fmtRs(mm.pend), `${mm.unpaid} not fully paid`, 'r')}
+    </div>
+    <div class="banner g">
+      <div>📅 <b>1st of the month routine:</b> tap <b>Remind</b> → WhatsApp opens with the message ready → press Send. When they pay (cash or transfer), tap <b>Mark paid</b>.</div>
+      ${mm.unpaid ? `<button class="btn wa sm" data-act="remindAll">${icon('wa')}Remind all unpaid (${mm.unpaid})</button>` : ''}
+    </div>
+    <div class="filters">
+      <div class="seg">${['all', 'unpaid', 'paid'].map(f => `<button class="${UI.feeF === f ? 'on' : ''}" data-act="feeF" data-f="${f}">${f[0].toUpperCase() + f.slice(1)} (${counts[f]})</button>`).join('')}</div>
+      <input class="search" id="feeQ" placeholder="Search student…" value="${esc(UI.feeQ)}">
+    </div>
+    <div class="list" id="list">${feeList()}</div>`;
+  },
+
+  test() {
+    const m = UI.testM, list = testsOf(m);
+    return `
+    <div class="ph"><div><h1>Tests & marks</h1><p class="sub">Create a test, then enter each student's marks. They show up in the month-end report.</p></div>
+      <button class="btn acc" data-act="newTest">${icon('plus')}New test</button></div>
+    ${monthPicker('test', m)}
+    <div class="list">${list.length ? list.map(t => {
+      const c = cls(t.classId) || { name: 'Deleted class', color: '#999' };
+      const vals = Object.values(t.marks).filter(v => v !== '' && v != null).map(Number);
+      const avg = vals.length ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length * 10) / 10 : null;
+      const top = vals.length ? Math.max(...vals) : null;
+      return `<button class="item" data-act="openTest" data-id="${t.id}">
+        <div class="av" style="background:${c.color}22;color:${c.color}">${icon('test')}</div>
+        <div class="info"><b>${esc(t.title)}</b><span class="muted small">${esc(c.name)} · ${fmtDate(t.date)} · out of ${t.total}</span></div>
+        <div style="text-align:right">${avg != null ? `<div><b>${avg}</b><span class="muted small"> avg</span></div><div class="muted small">Top: ${top}/${t.total}</div>` : '<span class="chip y">Enter marks</span>'}</div>
+      </button>`;
+    }).join('') : `<div class="empty">No tests in ${fmtMonth(m)} yet.<br><br><button class="btn pri sm" data-act="newTest">Create a test</button></div>`}</div>`;
+  },
+
+  rep() {
+    const m = UI.repM, mm = money(m);
+    let P = 0, A = 0; dueList(m).forEach(s => { const st = monthStats(s, m); P += st.P; A += st.A; });
+    return `
+    <div class="ph"><div><h1>Month-end report</h1><p class="sub">🔒 Admin only — not visible to parents or students.</p></div>
+      <div class="row noprint"><button class="btn ghost sm" data-act="print">Print</button><button class="btn pri sm" data-act="csv">Download Excel (CSV)</button></div></div>
+    ${monthPicker('rep', m)}
+    <div class="stats">
+      ${stat('Amount received', fmtRs(mm.rec), `of ${fmtRs(mm.exp)} expected`, 'g')}
+      ${stat('Yet to be received', fmtRs(mm.pend), `${mm.unpaid} students`, 'r')}
+      ${stat('Overall attendance', (P + A ? pctOf(P, P + A) : 0) + '%', `${P} present · ${A} absent`)}
+    </div>
+    <div class="filters noprint">
+      <input class="search" id="repQ" placeholder="Search student…" value="${esc(UI.repQ)}">
+      <select class="sel" id="repC"><option value="">All classes</option>${S.classes.map(c => `<option value="${c.id}" ${UI.repC === c.id ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select>
+    </div>
+    <div id="list">${repTable()}</div>
+    <p class="muted small">Tap a student to see class-wise attendance, every test mark and fee details. Cancelled classes and holidays are not counted as absent.</p>`;
+  },
+};
+
+function stuList() {
+  const q = UI.stuQ.toLowerCase();
+  const list = S.students.filter(s => (UI.stuT === 'left' ? s.status === 'left' : s.status !== 'left'))
+    .filter(s => !q || s.name.toLowerCase().includes(q) || s.phone.includes(q) || s.parentPhone.includes(q))
+    .filter(s => !UI.stuC || s.classIds.includes(UI.stuC))
+    .sort((a, b) => a.name.localeCompare(b.name));
+  if (!list.length) return `<div class="empty">No students found.</div>`;
+  return list.map(s => `<button class="item" data-act="viewStudent" data-s="${s.id}">
+    <div class="av">${initials(s.name)}</div>
+    <div class="info"><b>${esc(s.name)}${s.joinDate.slice(0, 7) === CUR_M && s.status !== 'left' ? ' <span class="chip b" style="font-size:10.5px;padding:2px 7px">NEW</span>' : ''}</b>
+      <div>${s.classIds.map(id => cls(id)).filter(Boolean).map(c => `<span class="tag" style="background:${c.color}">${esc(c.name)}</span>`).join('')}</div></div>
+    <div style="text-align:right;flex:none"><b>${fmtRs(s.fee)}</b><div class="muted small">${s.status === 'left' ? 'Left ' + fmtShort(s.leftDate) : planName(s)}</div></div>
+  </button>`).join('');
+}
+
+function feeList() {
+  const m = UI.feeM, q = UI.feeQ.toLowerCase();
+  const list = dueList(m).filter(s => !q || s.name.toLowerCase().includes(q))
+    .filter(s => UI.feeF === 'all' || (UI.feeF === 'paid' ? feeStatus(s, m) === 'paid' : feeStatus(s, m) !== 'paid'));
+  if (!list.length) return `<div class="empty">${UI.feeF === 'unpaid' ? 'Everyone has paid 🎉' : 'No students here.'}</div>`;
+  return list.map(s => {
+    const st = feeStatus(s, m), p = payOf(m, s.id), rem = S.reminders[m + '|' + s.id];
+    const badge = st === 'paid' ? `<span class="chip g">Paid</span>` : st === 'partial' ? `<span class="chip y">Partial</span>` : `<span class="chip r">Unpaid</span>`;
+    const sub = p ? `${st === 'partial' ? 'Paid ' + fmtRs(p.amount) + ' · ' : ''}${p.method} · ${fmtShort(p.date)}` : rem ? `Reminder sent ${fmtShort(rem)}` : `Parent: ${esc(s.parentPhone)}`;
+    const acts = st === 'paid'
+      ? `<button class="btn sm" data-act="receipt" data-s="${s.id}">${icon('wa')}Receipt</button><button class="btn ghost sm" data-act="unpay" data-s="${s.id}">Undo</button>`
+      : `<button class="btn wa sm" data-act="remind" data-s="${s.id}" data-m="${m}">${icon('wa')}Remind</button><button class="btn pri sm" data-act="pay" data-s="${s.id}">Mark paid</button>`;
+    return `<div class="item feeitem">
+      <div class="av">${initials(s.name)}</div>
+      <div class="info"><b>${esc(s.name)}</b><span class="muted small">${fmtRs(s.fee)} · ${sub}</span></div>
+      ${badge}
+      <div class="acts">${acts}</div>
+    </div>`;
+  }).join('');
+}
+
+function repRows() {
+  const m = UI.repM, q = UI.repQ.toLowerCase(), tests = testsOf(m);
+  return dueList(m).filter(s => !q || s.name.toLowerCase().includes(q)).filter(s => !UI.repC || s.classIds.includes(UI.repC)).map(s => {
+    const st = monthStats(s, m), fs = feeStatus(s, m), p = payOf(m, s.id);
+    const my = tests.filter(t => s.classIds.includes(t.classId) && t.marks[s.id] !== undefined && t.marks[s.id] !== '');
+    const tp = my.length ? Math.round(my.reduce((a, t) => a + Number(t.marks[s.id]) / t.total, 0) / my.length * 100) : null;
+    return { s, st, fs, p, my, tp };
+  });
+}
+function repTable() {
+  const rows = repRows();
+  if (!rows.length) return `<div class="empty">No students for this month.</div>`;
+  return `<div class="tablewrap"><table><thead><tr><th>Student</th><th>Present</th><th>Absent</th><th>Attendance</th><th>Fee</th><th>Tests (avg)</th></tr></thead><tbody>
+  ${rows.map(({ s, st, fs, p, my, tp }) => {
+    const ap = st.P + st.A ? pctOf(st.P, st.P + st.A) : null;
+    return `<tr class="click" data-act="repStudent" data-s="${s.id}">
+      <td><b>${esc(s.name)}</b>${s.status === 'left' ? ' <span class="chip n">Left</span>' : ''}<div class="muted small">${s.classIds.map(id => (cls(id) || {}).name).filter(Boolean).join(', ')}</div></td>
+      <td data-l="Present" style="color:var(--g);font-weight:700">${st.P}</td>
+      <td data-l="Absent" style="color:var(--r);font-weight:700">${st.A}</td>
+      <td>${ap == null ? '—' : `<span class="chip ${ap >= 85 ? 'g' : ap >= 70 ? 'y' : 'r'}">${ap}%</span>`}</td>
+      <td>${fs === 'paid' ? `<span class="chip g">Paid ${fmtShort(p.date)}</span>` : fs === 'partial' ? `<span class="chip y">Partial ${fmtRs(p.amount)}</span>` : `<span class="chip r">Unpaid ${fmtRs(s.fee)}</span>`}</td>
+      <td data-l="Tests">${tp == null ? '<span class="muted">—</span>' : `<b>${tp}%</b> <span class="muted small">(${my.length} test${my.length > 1 ? 's' : ''})</span>`}</td>
+    </tr>`;
+  }).join('')}</tbody></table></div>`;
+}
+
+/* ============ modal ============ */
+function openModal(title, html) {
+  $('#mTitle').textContent = title;
+  $('#mBody').innerHTML = html;
+  $('#modal').classList.remove('hidden');
+  $('#mBody').scrollTop = 0;
+}
+function closeModal() { $('#modal').classList.add('hidden'); M = null; }
+let toastT;
+function toast(t) { const el = $('#toast'); el.textContent = t; el.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('show'), 2400); }
+
+/* --- class attendance --- */
+function openClass(d, cid) {
+  const rec = S.att[d + '|' + cid];
+  M = { type: 'class', d, cid, absent: new Set(rec ? rec.absent : []), cancelForm: false };
+  renderClassModal();
+}
+function renderClassModal() {
+  const { d, cid } = M, c = cls(cid), k = d + '|' + cid, list = roster(cid, d);
+  const head = `<p class="muted" style="margin:-4px 0 12px">${fmtDate(d)} · ${fmtTime(c.start)}–${fmtTime(c.end)} · ${esc(c.teacher)}</p>`;
+  let body;
+  if (S.holidays[d]) {
+    body = `<div class="banner r"><div>🏖️ <b>Holiday — ${esc(S.holidays[d])}.</b> No one is marked absent.</div></div>`;
+  } else if (S.cancels[k]) {
+    body = `<div class="banner r"><div>🚫 <b>Class cancelled</b> — ${esc(S.cancels[k])}.<br>Students are <b>not</b> marked absent for this class.</div></div>
+      <button class="btn block" data-act="restoreClass">Restore class</button>`;
+  } else if (M.cancelForm) {
+    body = `<form data-form="cancelClass">
+      <p>Cancel <b>${esc(c.name)}</b> on ${fmtDate(d)}? Students won't be marked absent.</p>
+      <div class="field"><label>Reason</label>
+        <select name="reason" id="cReason">${['Teacher unavailable (emergency)', 'Rain / weather', 'Load-shedding', 'Exam day', 'Other'].map(x => `<option>${x}</option>`).join('')}</select></div>
+      <div class="field"><label>Note (optional)</label><input name="note" placeholder="e.g. Make-up class on Sunday"></div>
+      <div class="row"><button type="button" class="btn ghost" data-act="cancelBack">Back</button><button class="btn danger" style="flex:1">Cancel class</button></div>
+    </form>`;
+  } else if (d > TODAY) {
+    body = `<div class="banner b"><div>This class hasn't happened yet. You can mark attendance on the day — or cancel it in advance.</div></div>
+      <p class="muted small">${list.length} students enrolled: ${list.map(s => esc(s.name)).join(', ')}</p>
+      <button class="btn danger block" data-act="cancelForm">Cancel this class</button>`;
+  } else {
+    const a = [...M.absent].filter(id => list.some(s => s.id === id)).length;
+    body = `<div class="att-head">${stat('Present', list.length - a, 'students', 'g')}${stat('Absent', a, 'students', 'r')}</div>
+      <div class="between" style="margin-bottom:4px"><span class="muted small">Tap a student to switch Present ↔ Absent</span><button class="link small" data-act="allPresent">Mark all present</button></div>
+      <div>${list.length ? list.map(s => {
+        const ab = M.absent.has(s.id);
+        return `<div class="srow"><div class="row"><div class="av" style="width:32px;height:32px;font-size:12px">${initials(s.name)}</div><b style="font-weight:600">${esc(s.name)}</b></div>
+          <button class="tog ${ab ? 'a' : 'p'}" data-act="tog" data-s="${s.id}">${ab ? 'Absent' : 'Present'}</button></div>`;
+      }).join('') : '<div class="empty">No students enrolled in this class yet.</div>'}</div>
+      <div class="stickybar"><button class="btn danger" data-act="cancelForm">Cancel class</button><button class="btn pri" style="flex:1" data-act="saveAtt">${S.att[k] ? 'Update attendance' : 'Save attendance'}</button></div>`;
+  }
+  const keep = $('#mBody').scrollTop;
+  openModal(c.name, head + body);
+  $('#mBody').scrollTop = keep;
+}
+
+/* --- student form / detail --- */
+function studentForm(s) {
+  const e = s || { name: '', phone: '', parentPhone: '', classIds: [], planId: S.plans[0]?.id || 'custom', fee: S.plans[0]?.fee || 0, joinDate: TODAY };
+  openModal(s ? 'Edit student' : 'Add new student', `
+  <form data-form="student" data-id="${s ? s.id : ''}">
+    <div class="field"><label>Student name *</label><input name="name" value="${esc(e.name)}" placeholder="e.g. Ahmed Raza" required></div>
+    <div class="two">
+      <div class="field"><label>Student phone</label><input name="phone" type="tel" value="${esc(e.phone)}" placeholder="03xx-xxxxxxx"></div>
+      <div class="field"><label>Parent phone *</label><input name="parent" type="tel" value="${esc(e.parentPhone)}" placeholder="03xx-xxxxxxx" required></div>
+    </div>
+    <p class="hint muted small" style="margin:-6px 0 12px">Fee reminders go to the parent's WhatsApp.</p>
+    <div class="field"><label>Classes *</label><div class="checks">${S.classes.map(c => `<label><input type="checkbox" name="cls" value="${c.id}" ${e.classIds.includes(c.id) ? 'checked' : ''}>${esc(c.name)}</label>`).join('')}</div></div>
+    <div class="two">
+      <div class="field"><label>Fee plan</label><select name="plan" id="fPlan">${S.plans.map(p => `<option value="${p.id}" ${e.planId === p.id ? 'selected' : ''}>${esc(p.name)} — ${fmtRs(p.fee)}</option>`).join('')}<option value="custom" ${e.planId === 'custom' ? 'selected' : ''}>Custom fee</option></select></div>
+      <div class="field"><label>Monthly fee (Rs)</label><input name="fee" id="fFee" type="number" min="0" step="100" value="${e.fee}"></div>
+    </div>
+    <div class="field"><label>Joining date</label><input name="join" type="date" value="${e.joinDate}"></div>
+    <button class="btn pri block">${s ? 'Save changes' : 'Add student'}</button>
+  </form>`);
+}
+function studentDetail(id, m = CUR_M) {
+  const s = stu(id), st = monthStats(s, m), fs = feeStatus(s, m), p = payOf(m, s.id);
+  const my = testsOf(m).filter(t => s.classIds.includes(t.classId) && t.marks[s.id] !== undefined);
+  openModal(s.name, `
+    <div class="row" style="margin-bottom:12px"><div class="av" style="width:48px;height:48px;font-size:16px">${initials(s.name)}</div>
+      <div><b>${esc(s.name)}</b> ${s.status === 'left' ? '<span class="chip n">Left</span>' : '<span class="chip g">Active</span>'}
+      <div class="muted small">Joined ${fmtDate(s.joinDate)} ${parseYmd(s.joinDate).getFullYear()} · ${planName(s)} · ${fmtRs(s.fee)}/month</div></div></div>
+    <div class="card" style="padding:12px;margin-bottom:12px">
+      <div class="between small"><span class="muted">Student phone</span><b>${esc(s.phone || '—')}</b></div>
+      <div class="between small" style="margin-top:6px"><span class="muted">Parent phone</span><b>${esc(s.parentPhone)}</b></div>
+      <div style="margin-top:8px">${s.classIds.map(id => cls(id)).filter(Boolean).map(c => `<span class="tag" style="background:${c.color}">${esc(c.name)}</span>`).join('')}</div>
+    </div>
+    <h2>${fmtMonth(m)}</h2>
+    <div class="att-head">${stat('Present', st.P, 'classes', 'g')}${stat('Absent', st.A, 'classes', 'r')}${stat('Cancelled', st.C, 'not counted')}</div>
+    <div class="list" style="margin-bottom:12px">${Object.entries(st.by).map(([cid, b]) => { const c = cls(cid); return `<div class="between small" style="padding:4px 0"><span><span class="dot" style="color:${c.color}"></span> ${esc(c.name)}</span><span><b style="color:var(--g)">${b.P} P</b> · <b style="color:var(--r)">${b.A} A</b>${b.C ? ` · <span class="muted">${b.C} cancelled</span>` : ''}</span></div>`; }).join('') || '<span class="muted small">No attendance yet.</span>'}</div>
+    <div class="between" style="margin-bottom:12px"><b>Fee</b>${fs === 'paid' ? `<span class="chip g">Paid · ${p.method} · ${fmtShort(p.date)}</span>` : fs === 'partial' ? `<span class="chip y">Partial · ${fmtRs(p.amount)}</span>` : `<span class="chip r">Unpaid · ${fmtRs(s.fee)}</span>`}</div>
+    <b>Test marks</b>
+    <div class="list" style="margin:8px 0 16px">${my.length ? my.map(t => { const v = t.marks[s.id]; return `<div class="between small"><span>${esc(t.title)} <span class="muted">· ${fmtShort(t.date)}</span></span><b>${v === '' ? '<span class="muted">Absent</span>' : `${v}/${t.total} <span class="muted">(${pctOf(v, t.total)}%)</span>`}</b></div>`; }).join('') : '<span class="muted small">No tests this month.</span>'}</div>
+    ${s.status === 'left'
+      ? `<button class="btn pri block" data-act="readmit" data-s="${s.id}">Re-admit student</button>`
+      : `<div class="row"><button class="btn danger" data-act="markLeft" data-s="${s.id}">Mark as left</button><button class="btn pri" style="flex:1" data-act="editStudent" data-s="${s.id}">Edit details</button></div>`}
+  `);
+}
+
+/* --- payments --- */
+function payForm(id) {
+  const s = stu(id), m = UI.feeM, p = payOf(m, id);
+  openModal('Record payment', `
+  <form data-form="pay" data-s="${id}">
+    <p style="margin-top:0"><b>${esc(s.name)}</b> · ${fmtMonth(m)} · monthly fee ${fmtRs(s.fee)}</p>
+    <div class="field"><label>Amount received (Rs)</label><input name="amount" type="number" min="1" value="${p ? p.amount : s.fee}" required></div>
+    <div class="field"><label>Payment method</label><div class="checks">${METHODS.map((x, i) => `<label><input type="radio" name="method" value="${x}" ${i === 0 ? 'checked' : ''}>${x}</label>`).join('')}</div></div>
+    <div class="field"><label>Date received</label><input name="date" type="date" value="${TODAY}"></div>
+    <button class="btn pri block">Mark as paid</button>
+  </form>`);
+}
+function remindAllStep() {
+  const { queue, i, m } = M;
+  if (i >= queue.length) { openModal('Reminders done', `<div class="empty" style="border:0">✅ All reminders handled.<br><br><button class="btn pri" data-act="close">Done</button></div>`); M = null; render(); return; }
+  const s = stu(queue[i]);
+  openModal(`Reminder ${i + 1} of ${queue.length}`, `
+    <p class="muted small" style="margin-top:0">Browsers only allow one WhatsApp chat to open at a time, so we go one by one. Tap the green button, press Send in WhatsApp, then come back.</p>
+    <div class="card" style="margin-bottom:12px"><b>${esc(s.name)}</b><div class="muted small">Parent: ${esc(s.parentPhone)} · ${fmtRs(s.fee)}</div>
+      <p style="background:#e7fbe9;border-radius:10px;padding:10px;font-size:14px;margin:10px 0 0">${esc(fill(S.settings.remind, s, m))}</p></div>
+    <div class="row"><button class="btn ghost" data-act="raSkip">Skip</button><button class="btn wa" style="flex:1" data-act="raSend">${icon('wa')}Open WhatsApp</button></div>`);
+}
+
+/* --- tests --- */
+function newTestForm() {
+  openModal('New test', `
+  <form data-form="newTest">
+    <div class="field"><label>Class</label><select name="cls">${S.classes.map(c => `<option value="${c.id}">${esc(c.name)} — ${esc(c.teacher)}</option>`).join('')}</select></div>
+    <div class="field"><label>Test name</label><input name="title" placeholder="e.g. Chemistry Quiz 2" required></div>
+    <div class="two">
+      <div class="field"><label>Date</label><input name="date" type="date" value="${TODAY}"></div>
+      <div class="field"><label>Total marks</label><input name="total" type="number" min="1" value="20" required></div>
+    </div>
+    <button class="btn pri block">Create & enter marks</button>
+  </form>`);
+}
+function marksForm(id) {
+  const t = S.tests.find(x => x.id === id), c = cls(t.classId) || { name: 'Deleted class' };
+  const list = c.id ? roster(c.id, t.date) : [];
+  openModal(t.title, `
+  <form data-form="marks" data-id="${id}">
+    <p class="muted" style="margin-top:-4px">${esc(c.name)} · ${fmtDate(t.date)} · out of <b>${t.total}</b><br><span class="small">Leave blank if the student missed the test.</span></p>
+    <div class="marks">${list.length ? list.map(s => `<div class="srow"><b style="font-weight:600">${esc(s.name)}</b><span class="row"><input type="number" name="m_${s.id}" min="0" max="${t.total}" step="0.5" value="${t.marks[s.id] ?? ''}" placeholder="–"><span class="muted small">/ ${t.total}</span></span></div>`).join('') : '<div class="empty">No students in this class.</div>'}</div>
+    <div class="stickybar"><button type="button" class="btn danger" data-act="delTest" data-id="${id}">Delete</button><button class="btn pri" style="flex:1">Save marks</button></div>
+  </form>`);
+}
+
+/* --- settings & classes --- */
+function settingsModal() {
+  openModal('Settings', `
+  <form data-form="settings">
+    <div class="field"><label>Academy name</label><input name="academy" value="${esc(S.settings.academy)}"></div>
+    <div class="field"><label>Admin PIN</label><input name="pin" inputmode="numeric" maxlength="6" value="${esc(S.settings.pin)}"></div>
+    <div class="field"><label>Fee reminder message</label><textarea name="remind">${esc(S.settings.remind)}</textarea><span class="hint">Use {student}, {amount}, {month}, {academy}</span></div>
+    <div class="field"><label>Payment receipt message</label><textarea name="receipt">${esc(S.settings.receipt)}</textarea><span class="hint">Also supports {method}</span></div>
+    <div class="field"><label>Fee plans</label>
+      ${S.plans.map(p => `<div class="two" style="margin-bottom:6px"><input name="pn_${p.id}" value="${esc(p.name)}"><input name="pf_${p.id}" type="number" value="${p.fee}"></div>`).join('')}
+      <button type="button" class="link small" data-act="addPlan">+ Add fee plan</button></div>
+    <button class="btn pri block">Save settings</button>
+  </form>
+  <div class="row mt"><button class="btn ghost" style="flex:1" data-act="manageClasses">Manage classes</button><button class="btn danger" style="flex:1" data-act="reset">Reset demo data</button></div>`);
+}
+function classesModal() {
+  openModal('Classes & timetable', `
+    <div class="list">${S.classes.slice().sort((a, b) => a.start.localeCompare(b.start)).map(c => `
+      <button class="item" data-act="editClass" data-id="${c.id}"><span class="bar2" style="width:5px;align-self:stretch;border-radius:5px;background:${c.color}"></span>
+        <div class="info"><b>${esc(c.name)}</b><span class="muted small">${fmtTime(c.start)}–${fmtTime(c.end)} · ${c.days.map(d => DAYS[d]).join(', ')}</span></div>
+        <span class="muted small">${esc(c.teacher)} ›</span></button>`).join('')}</div>
+    <button class="btn acc block mt" data-act="editClass" data-id="">${icon('plus')}Add class</button>`);
+}
+function classForm(id) {
+  const c = id ? cls(id) : { name: '', teacher: '', start: '16:00', end: '17:00', days: [1, 2, 3, 4, 5, 6], color: COLORS[S.classes.length % COLORS.length] };
+  openModal(id ? 'Edit class' : 'Add class', `
+  <form data-form="class" data-id="${id || ''}">
+    <div class="field"><label>Subject / class name</label><input name="name" value="${esc(c.name)}" placeholder="e.g. Biology" required></div>
+    <div class="field"><label>Teacher</label><input name="teacher" value="${esc(c.teacher)}" placeholder="e.g. Sir Ali"></div>
+    <div class="two"><div class="field"><label>Starts</label><input name="start" type="time" value="${c.start}"></div><div class="field"><label>Ends</label><input name="end" type="time" value="${c.end}"></div></div>
+    <div class="field"><label>Days</label><div class="checks">${[1, 2, 3, 4, 5, 6, 0].map(d => `<label><input type="checkbox" name="days" value="${d}" ${c.days.includes(d) ? 'checked' : ''}>${DAYS[d]}</label>`).join('')}</div></div>
+    <div class="field"><label>Colour</label><div class="checks">${COLORS.map(col => `<label style="padding:6px"><input type="radio" name="color" value="${col}" ${c.color === col ? 'checked' : ''}><span style="width:18px;height:18px;border-radius:50%;background:${col};display:inline-block"></span></label>`).join('')}</div></div>
+    <div class="row">${id ? `<button type="button" class="btn danger" data-act="delClass" data-id="${id}">Delete</button>` : ''}<button class="btn pri" style="flex:1">${id ? 'Save class' : 'Add class'}</button></div>
+  </form>`);
+}
+
+/* ============ CSV ============ */
+function exportCSV() {
+  const m = UI.repM, tests = testsOf(m).slice().reverse();
+  const head = ['Student', 'Parent phone', 'Classes', 'Present', 'Absent', 'Cancelled', 'Attendance %', 'Monthly fee', 'Paid amount', 'Fee status', 'Paid on', 'Method', ...tests.map(t => `${t.title} (/${t.total})`)];
+  const rows = repRows().map(({ s, st, fs, p }) => [s.name, s.parentPhone, s.classIds.map(id => (cls(id) || {}).name).join(' / '), st.P, st.A, st.C,
+    st.P + st.A ? pctOf(st.P, st.P + st.A) : '', s.fee, p ? p.amount : 0, fs, p ? p.date : '', p ? p.method : '',
+    ...tests.map(t => s.classIds.includes(t.classId) ? (t.marks[s.id] === '' ? 'Absent' : (t.marks[s.id] ?? '')) : '')]);
+  const csv = [head, ...rows].map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv' }));
+  a.download = `${S.settings.academy.replace(/\s+/g, '-')}-report-${m}.csv`;
+  a.click();
+  toast('Report downloaded — opens in Excel');
+}
+
+/* ============ actions ============ */
+const A = {
+  nav: d => { UI.view = d.v; closeModal(); render(); window.scrollTo(0, 0); },
+  close: () => closeModal(),
+  mon: d => { UI[d.k + 'M'] = shiftM(UI[d.k + 'M'], +d.d); render(); },
+  day: d => { UI.attDate = shiftD(UI.attDate, +d.d); render(); },
+  dayToday: () => { UI.attDate = TODAY; render(); },
+  holiday: () => openModal('Mark as holiday', `<form data-form="holiday">
+      <p style="margin-top:0">All classes on <b>${fmtDate(UI.attDate)}</b> will be off and no student will be marked absent.</p>
+      <div class="field"><label>Reason</label><select name="reason">${['Public holiday', 'Eid holidays', 'Emergency closure', 'Rain / weather', 'Exam break', 'Other'].map(x => `<option>${x}</option>`).join('')}</select></div>
+      <button class="btn danger block">Mark as holiday</button></form>`),
+  unholiday: () => { delete S.holidays[UI.attDate]; save(); render(); toast('Holiday removed'); },
+  openClass: d => openClass(d.d, d.c),
+  tog: d => { M.absent.has(d.s) ? M.absent.delete(d.s) : M.absent.add(d.s); renderClassModal(); },
+  allPresent: () => { M.absent.clear(); renderClassModal(); },
+  saveAtt: () => {
+    const list = roster(M.cid, M.d), absent = [...M.absent].filter(id => list.some(s => s.id === id));
+    S.att[M.d + '|' + M.cid] = { absent, at: Date.now() }; save();
+    toast(`${cls(M.cid).name} saved — ${list.length - absent.length} present, ${absent.length} absent`);
+    closeModal(); render();
+  },
+  cancelForm: () => { M.cancelForm = true; renderClassModal(); },
+  cancelBack: () => { M.cancelForm = false; renderClassModal(); },
+  restoreClass: () => { delete S.cancels[M.d + '|' + M.cid]; save(); M.cancelForm = false; renderClassModal(); render(); toast('Class restored'); },
+  manageClasses: () => classesModal(),
+  editClass: d => classForm(d.id),
+  delClass: d => {
+    if (!confirmTwice(d)) return;
+    S.classes = S.classes.filter(c => c.id !== d.id);
+    S.students.forEach(s => s.classIds = s.classIds.filter(id => id !== d.id));
+    save(); classesModal(); render(); toast('Class deleted');
+  },
+  addStudent: () => studentForm(null),
+  editStudent: d => studentForm(stu(d.s)),
+  viewStudent: d => studentDetail(d.s),
+  repStudent: d => studentDetail(d.s, UI.repM),
+  markLeft: d => {
+    if (!confirmTwice(d, 'Tap again to confirm')) return;
+    const s = stu(d.s); s.status = 'left'; s.leftDate = TODAY; save(); closeModal(); render();
+    toast(`${s.name} marked as left — history kept in reports`);
+  },
+  readmit: d => { const s = stu(d.s); s.status = 'active'; delete s.leftDate; save(); closeModal(); render(); toast(`${s.name} re-admitted`); },
+  stuT: d => { UI.stuT = d.t; render(); },
+  feeF: d => { UI.feeF = d.f; render(); },
+  remind: d => {
+    const s = stu(d.s), m = d.m || UI.feeM;
+    openWA(s.parentPhone, fill(S.settings.remind, s, m));
+    S.reminders[m + '|' + s.id] = TODAY; save(); render();
+    toast(`WhatsApp opened for ${s.name}'s parent`);
+  },
+  remindAll: () => {
+    const m = UI.feeM;
+    M = { type: 'ra', m, i: 0, queue: dueList(m).filter(s => feeStatus(s, m) !== 'paid').map(s => s.id) };
+    remindAllStep();
+  },
+  raSend: () => { const s = stu(M.queue[M.i]); openWA(s.parentPhone, fill(S.settings.remind, s, M.m)); S.reminders[M.m + '|' + s.id] = TODAY; save(); M.i++; remindAllStep(); },
+  raSkip: () => { M.i++; remindAllStep(); },
+  pay: d => payForm(d.s),
+  unpay: d => { delete S.payments[UI.feeM + '|' + d.s]; save(); render(); toast('Payment removed'); },
+  receipt: d => { const s = stu(d.s), m = d.m || UI.feeM; const p = payOf(m, s.id); openWA(s.parentPhone, fill(S.settings.receipt, s, m, { amount: p.amount, method: p.method })); closeModal(); },
+  newTest: () => newTestForm(),
+  openTest: d => marksForm(d.id),
+  delTest: d => { if (!confirmTwice(d)) return; S.tests = S.tests.filter(t => t.id !== d.id); save(); closeModal(); render(); toast('Test deleted'); },
+  print: () => window.print(),
+  csv: () => exportCSV(),
+  settings: () => settingsModal(),
+  addPlan: () => { S.plans.push({ id: 'p' + uid(), name: 'New plan', fee: 9000 }); save(); settingsModal(); },
+  reset: d => { if (!confirmTwice(d, 'Tap again to reset everything')) return; try { localStorage.removeItem(KEY); } catch (e) {} S = seed(); save(); closeModal(); UI.view = 'home'; render(); toast('Demo data reset'); },
+  lock: () => { try { sessionStorage.removeItem('gw-unlocked'); } catch (e) {} closeModal(); showLock(); },
+};
+function confirmTwice(d, msg = 'Tap again to confirm delete') {
+  const el = document.activeElement;
+  if (el && el.dataset.armed) return true;
+  if (el) { el.dataset.armed = '1'; el.dataset.orig = el.textContent; el.textContent = msg; setTimeout(() => { if (el.isConnected) { delete el.dataset.armed; el.textContent = el.dataset.orig; } }, 3000); }
+  else return window.confirm(msg);
+  return false;
+}
+
+/* ============ forms ============ */
+const F = {
+  unlock: f => {
+    if (f.pin.value === S.settings.pin) { try { sessionStorage.setItem('gw-unlocked', '1'); } catch (e) {} $('#lock').classList.add('hidden'); f.reset(); }
+    else { toast('Wrong PIN'); f.pin.value = ''; }
+  },
+  student: f => {
+    const fd = new FormData(f), name = fd.get('name').trim(), parent = fd.get('parent').trim(), classIds = fd.getAll('cls');
+    if (!name || !parent || !classIds.length) { toast('Please add name, parent phone and at least one class'); return; }
+    const data = { name, phone: fd.get('phone').trim(), parentPhone: parent, classIds, planId: fd.get('plan'), fee: Number(fd.get('fee')) || 0, joinDate: fd.get('join') || TODAY };
+    if (f.dataset.id) { Object.assign(stu(f.dataset.id), data); toast('Student updated'); }
+    else { S.students.push({ id: 's' + uid(), status: 'active', ...data }); toast(`${name} added ✓ — now on attendance & fee lists`); }
+    save(); closeModal(); render();
+  },
+  pay: f => {
+    const fd = new FormData(f), s = stu(f.dataset.s), m = UI.feeM;
+    const p = { amount: Number(fd.get('amount')), method: fd.get('method'), date: fd.get('date') || TODAY };
+    S.payments[m + '|' + s.id] = p; save(); render();
+    openModal('Payment recorded ✓', `<div style="text-align:center">
+      <div style="font-size:42px">✅</div><p><b>${fmtRs(p.amount)}</b> received from <b>${esc(s.name)}</b><br><span class="muted small">${p.method} · ${fmtDate(p.date)}</span></p>
+      <button class="btn wa block" data-act="receipt" data-s="${s.id}" data-m="${m}">${icon('wa')}Send receipt on WhatsApp</button>
+      <button class="btn ghost block mt" data-act="close">Done</button></div>`);
+  },
+  cancelClass: f => {
+    const fd = new FormData(f), note = fd.get('note').trim();
+    S.cancels[M.d + '|' + M.cid] = fd.get('reason') + (note ? ' — ' + note : '');
+    delete S.att[M.d + '|' + M.cid]; save();
+    toast(`${cls(M.cid).name} cancelled — no one marked absent`); closeModal(); render();
+  },
+  holiday: f => { S.holidays[UI.attDate] = new FormData(f).get('reason'); save(); closeModal(); render(); toast('Day marked as holiday'); },
+  newTest: f => {
+    const fd = new FormData(f);
+    const t = { id: uid(), classId: fd.get('cls'), title: fd.get('title').trim(), date: fd.get('date') || TODAY, total: Number(fd.get('total')) || 1, marks: {} };
+    S.tests.push(t); save(); UI.testM = t.date.slice(0, 7); render(); marksForm(t.id);
+  },
+  marks: f => {
+    const t = S.tests.find(x => x.id === f.dataset.id);
+    for (const [k, v] of new FormData(f).entries()) if (k.startsWith('m_')) t.marks[k.slice(2)] = v === '' ? '' : Math.min(t.total, Math.max(0, Number(v)));
+    save(); closeModal(); render(); toast('Marks saved');
+  },
+  settings: f => {
+    const fd = new FormData(f);
+    S.settings.academy = fd.get('academy').trim() || 'The Gullywood Academy';
+    S.settings.pin = fd.get('pin').trim() || '1234';
+    S.settings.remind = fd.get('remind'); S.settings.receipt = fd.get('receipt');
+    S.plans.forEach(p => { p.name = fd.get('pn_' + p.id) || p.name; p.fee = Number(fd.get('pf_' + p.id)) || p.fee; });
+    save(); closeModal(); render(); toast('Settings saved');
+  },
+  class: f => {
+    const fd = new FormData(f), days = fd.getAll('days').map(Number);
+    if (!days.length) { toast('Pick at least one day'); return; }
+    const data = { name: fd.get('name').trim(), teacher: fd.get('teacher').trim(), start: fd.get('start'), end: fd.get('end'), days, color: fd.get('color') || COLORS[0] };
+    if (f.dataset.id) Object.assign(cls(f.dataset.id), data); else S.classes.push({ id: 'c' + uid(), ...data });
+    save(); render(); classesModal(); toast('Class saved');
+  },
+};
+
+/* ============ events ============ */
+document.addEventListener('click', e => {
+  if (e.target.id === 'modal') { closeModal(); return; }
+  const el = e.target.closest('[data-act]'); if (!el) return;
+  const fn = A[el.dataset.act]; if (!fn) return;
+  e.preventDefault(); el.focus && el.focus(); fn(el.dataset, el);
+});
+document.addEventListener('submit', e => { e.preventDefault(); const fn = F[e.target.dataset.form]; if (fn) fn(e.target); });
+document.addEventListener('input', e => {
+  const id = e.target.id;
+  if (id === 'stuQ') { UI.stuQ = e.target.value; $('#list').innerHTML = stuList(); }
+  if (id === 'feeQ') { UI.feeQ = e.target.value; $('#list').innerHTML = feeList(); }
+  if (id === 'repQ') { UI.repQ = e.target.value; $('#list').innerHTML = repTable(); }
+});
+document.addEventListener('change', e => {
+  const id = e.target.id;
+  if (id === 'stuC') { UI.stuC = e.target.value; $('#list').innerHTML = stuList(); }
+  if (id === 'repC') { UI.repC = e.target.value; $('#list').innerHTML = repTable(); }
+  if (id === 'attDate' && e.target.value) { UI.attDate = e.target.value; render(); }
+  if (id === 'fPlan') { const p = S.plans.find(x => x.id === e.target.value); if (p) $('#fFee').value = p.fee; }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+function showLock() { $('#lock').classList.remove('hidden'); setTimeout(() => $('#lock input').focus(), 50); }
+let unlocked = false; try { unlocked = sessionStorage.getItem('gw-unlocked') === '1'; } catch (e) {}
+render();
+if (!unlocked) showLock();
+</script>
+</body>
+</html>
